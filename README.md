@@ -42,15 +42,27 @@ A full-stack Distributed File System that allows users to upload, store, downloa
 
 ```
 dfs-project/
-│
-├── config/       # MongoDB nodes setup
-├── models/       # File metadata schema
-├── routes/       # API routes
-├── services/     # Hashing & chunk logic
-├── frontend/     # React app
-├── .env          # Environment variables
-├── server.js     # Entry point
-└── package.json
+├── config/                # MongoDB nodes setup
+│   └── nodes.js
+├── frontend/
+│   ├── public/
+│   │   └── index.html ✅
+│   ├── src/
+│   │   ├── App.js
+│   │   └── index.js ✅
+│   └── package.json ✅
+├── models/
+│   └── FileManifest.js
+├── routes/                # API routes
+│   ├── download.js
+│   ├── files.js
+│   └── upload.js
+├── services/              # Hashing & chunk logic
+│   ├── chunkService.js
+│   └── hashRing.js
+├── .env                   # Environment variables
+├── package.json
+├── server.js              # Entry point
 ```
 
 ---
@@ -103,11 +115,13 @@ npm start
 http://localhost:3001
 
 ## 🔌 API Endpoints
+```
 Method	Endpoint	          Description
 POST	  /api/upload	        Upload file
 GET	    /api/download/:id	  Download file
 GET	    /api/files	        List files
 DELETE	/api/delete/:id	    Delete file
+```
 
 ## 🧪 Testing with Postman
 Upload File
