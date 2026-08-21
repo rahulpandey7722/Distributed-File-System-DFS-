@@ -136,12 +136,12 @@ View file list
 Download/Delete files
  ---
 ## 💡 Future Improvements
-✅ File search functionality
-✅ Authentication (JWT)
-✅ Cloud deployment (AWS)
-✅ Progress bar for uploads
-✅ Multi-node real distributed setup
----
+✅ File search functionality  
+✅ Authentication (JWT)  
+✅ Cloud deployment (AWS)  
+✅ Progress bar for uploads  
+✅ Multi-node real distributed setup  
+
 🧑‍💻 Author
 Rahul Shankar Pandey
 B.Tech CSE Student
