@@ -90,27 +90,27 @@ dfs-project/
 
 ## 1. Clone Repository
 
-git clone https://github.com/your-username/dfs-project.git(bash)
-cd dfs-project
-
+git clone (bash)
+cd dfs-project (bash)
+---
 ## 2. Install Backend Dependencies
 npm install(bash)
-
+---
 ## 3. Setup Environment Variables
 Create .env file:
 MONGO_URI=your_mongodb_connection_string
-
+---
 ## 4. Run Backend
 node server.js(bash)
 
 ## Server will run on:
 http://localhost:3000
-
+---
 ## 5. Setup Frontend
 cd frontend
 npm install
 npm start
-
+---
 ## Frontend will run on:
 http://localhost:3001
 
@@ -122,27 +122,27 @@ GET	    /api/download/:id	  Download file
 GET	    /api/files	        List files
 DELETE	/api/delete/:id	    Delete file
 ```
-
+---
 ## 🧪 Testing with Postman
 Upload File
 Method: POST
 URL: http://localhost:3000/api/upload
 Body → form-data
 Key: file (type: File)
-
+---
 ## 📸 UI Preview
 Upload file
 View file list
 Download/Delete files
- 
+ ---
 ## 💡 Future Improvements
 ✅ File search functionality
 ✅ Authentication (JWT)
 ✅ Cloud deployment (AWS)
 ✅ Progress bar for uploads
 ✅ Multi-node real distributed setup
+---
 🧑‍💻 Author
-
 Rahul Shankar Pandey
 B.Tech CSE Student
 
