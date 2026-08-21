@@ -133,22 +133,27 @@ DELETE	 /api/delete/:id	     Delete file
 ## 🧪 Testing with Postman  
 Upload File  
 Method: POST  
+```
 URL: http://localhost:3000/api/upload  
+```
 Body → form-data  
 Key: file (type: File)  
 
 Download 
 Method: GET    
+```
 URL: http://localhost:3000/api/download/<field_id>  
-
+```
 To see list  
-Method: GET  
+Method: GET 
+```
 URL: http://localhost:3000/api/lists  
-
+```
 To delete  
 Method: DELETE  
+```
 URL: http://localhost:3000/api/delete/<field_id>  
-
+```
 ## 📸 UI Preview  
 Upload file  
 View file list  
@@ -156,11 +161,11 @@ Download/Delete files
 
 ## 💡 Future Improvements
 ✅ File search functionality  
-✅ Authentication (JWT) 
+✅ Authentication (JWT)  
 ✅ Progress bar for uploads  
 ✅ Multi-node real distributed setup  
 
-🧑‍💻 Author
-Rahul Shankar Pandey
-B.Tech CSE Student
+🧑‍💻 Author  
+Rahul Shankar Pandey  
+B.Tech CSE Student  
 
