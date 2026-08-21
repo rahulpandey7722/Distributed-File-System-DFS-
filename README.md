@@ -31,21 +31,21 @@ A full-stack Distributed File System that allows users to upload, store, downloa
 
 ### Frontend
 - React.js
-- Axios
+ Axios
 
 ---
 
 ## 📂 Project Structure
-dfs-project/
-│
-├── config/ # MongoDB nodes setup
-├── models/ # File metadata schema
-├── routes/ # API routes
-├── services/ # Hashing & chunk logic
-├── frontend/ # React app
-├── .env # Environment variables
-├── server.js # Entry point
-└── package.json
+-dfs-project/
+-│
+-├── config/ # MongoDB nodes setup
+-├── models/ # File metadata schema
+-├── routes/ # API routes
+-├── services/ # Hashing & chunk logic
+-├── frontend/ # React app
+-├── .env # Environment variables
+-├── server.js # Entry point
+-└── package.json
 
 
 ---
