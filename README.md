@@ -1,7 +1,8 @@
-# Distributed-File-System-DFS-
+# Distributed File System (DFS)
+
 A scalable Distributed File System built using Node.js, MongoDB (GridFS), and React that supports file upload, download, deletion, and replication. The system implements file chunking and consistent hashing to distribute data across multiple nodes, ensuring fault tolerance and efficient storage management.
 
-# 🚀 Distributed File System (DFS) using MongoDB & React
+## 🚀 Distributed File System (DFS) using MongoDB & React
 
 A full-stack Distributed File System that allows users to upload, store, download, and delete files using a scalable architecture with **Node.js, MongoDB (GridFS), and React**.
 
@@ -23,6 +24,7 @@ A full-stack Distributed File System that allows users to upload, store, downloa
 ## 🏗️ Tech Stack
 
 ### Backend
+
 - Node.js
 - Express.js
 - MongoDB (GridFS)
@@ -30,22 +32,28 @@ A full-stack Distributed File System that allows users to upload, store, downloa
 - Multer
 
 ### Frontend
+
 - React.js
- Axios
+- Axios
 
 ---
 
 ## 📂 Project Structure
--dfs-project/
--│
--├── config/ # MongoDB nodes setup
--├── models/ # File metadata schema
--├── routes/ # API routes
--├── services/ # Hashing & chunk logic
--├── frontend/ # React app
--├── .env # Environment variables
--├── server.js # Entry point
--└── package.json
+
+```
+dfs-project/
+│
+├── config/       # MongoDB nodes setup
+├── models/       # File metadata schema
+├── routes/       # API routes
+├── services/     # Hashing & chunk logic
+├── frontend/     # React app
+├── .env          # Environment variables
+├── server.js     # Entry point
+└── package.json
+```
+
+---
 
 
 ---
