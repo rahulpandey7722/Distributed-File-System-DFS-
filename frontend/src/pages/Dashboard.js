@@ -83,7 +83,7 @@ const Dashboard = () => {
         {/* 📊 Dashboard Overview */}
         {location.pathname === "/" && (
           <div style={{ marginTop: "20px" }}>
-            <p>Welcome to Distributed File System Dashboard 🚀</p>
+            <p>Welcome to Distributed File System Dashboard created by Rahul Shankar Pandey🚀</p>
             <p>Total Files: {files.length}</p>
           </div>
         )}
