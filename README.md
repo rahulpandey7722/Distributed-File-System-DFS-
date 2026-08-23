@@ -12,15 +12,11 @@ The system implements **file chunking + consistent hashing** to distribute data 
 
 ## 📌 Features
 
-- 📤 Upload any file type (mp4, jpg, pdf, ppt, etc.)
-- 📥 Download files
-- 🗑️ Delete files
-- 📂 List all uploaded files
-- ⚡ File chunking (splitting large files)
-- 🔁 Replication across nodes (fault tolerance)
-- 🧠 Consistent hashing for node selection
-- 🌐 React-based UI dashboard
-- 🖥️ Multi-node storage using MongoDB GridFS
+- Upload files
+- Download files
+- Delete files
+- Distributed storage using consistent hashing
+- File chunking and replication
 
 ---
 
