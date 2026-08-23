@@ -119,49 +119,52 @@ Frontend runs on:
 http://localhost:3000
 ```
 ## 🔌 API Endpoints 
-Method	Endpoint	           Description
-POST	   /api/upload	        Upload file
-GET	   /api/download/:id	  Download file
-GET	   /api/files	        List files
-DELETE	/api/delete/:id	  Delete file
+Method	Endpoint	           Description  
+POST	   /api/upload	        Upload file  
+GET	   /api/download/:id	  Download file  
+GET	   /api/files	        List files  
+DELETE	/api/delete/:id	  Delete file  
 
 ## 🧪 Testing with Postman
 
-Upload File
-Method: POST
-URL:
-http://localhost:3001/api/upload
-Body → form-data
+1. Upload File  
+Method: POST  
+URL: http://localhost:3001/api/upload  
+Body → form-data  
 Key: file (type: File)
-Download File
+ 
+2. Download File  
 GET http://localhost:3001/api/download/<file_id>
-List Files
+
+3. List Files  
 GET http://localhost:3001/api/files
-Delete File
-DELETE http://localhost:3001/api/delete/<file_id>
 
-## 📊 System Architecture
-Files are split into chunks
-Each chunk is distributed using consistent hashing
-Replication ensures:
-Fault tolerance
-High availability
-MongoDB GridFS acts as distributed storage nodes
+4. Delete File  
+DELETE http://localhost:3001/api/delete/<file_id>  
 
-## 🧠 Core Concepts Used
-Distributed Systems
-Consistent Hashing
-Fault Tolerance
-Data Replication
-Chunk-based Storage
-GridFS (MongoDB)
+## 📊 System Architecture  
+Files are split into chunks  
+Each chunk is distributed using consistent hashing  
+Replication ensures:  
+Fault tolerance  
+High availability  
+MongoDB GridFS acts as distributed storage nodes  
 
-## 📸 UI Features
-Upload files
-View file list
-Download/Delete files
-Sidebar navigation
-Dashboard overview
+## 🧠 Core Concepts Used  
+Distributed Systems  
+Consistent Hashing  
+Fault Tolerance  
+Data Replication  
+Chunk-based Storage  
+GridFS (MongoDB)  
 
-Rahul Shankar Pandey
-B.Tech CSE Student
+## 📸 UI Features  
+Upload files  
+View file list  
+Download/Delete files  
+Sidebar navigation  
+Dashboard overview  
+
+## Author  
+Rahul Shankar Pandey  
+B.Tech CSE Student  
