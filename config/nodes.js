@@ -1,24 +1,41 @@
 const mongoose = require("mongoose");
 const { GridFSBucket } = require("mongodb");
 
-let bucket;
+let buckets = {};
+let nodeIds = [];
 
-// Initialize bucket after DB connection
-const initBucket = () => {
+// 🔥 Initialize buckets for multiple nodes
+function initBuckets() {
   const db = mongoose.connection.db;
-  bucket = new GridFSBucket(db, {
-    bucketName: "uploads",
+
+  if (!db) {
+    throw new Error("MongoDB not connected");
+  }
+
+  // Example: 3 nodes (you can scale later)
+  nodeIds = ["node1", "node2", "node3"];
+
+  nodeIds.forEach((node) => {
+    buckets[node] = new GridFSBucket(db, {
+      bucketName: node,
+    });
+
+    console.log(`✅ Connected to ${node}`);
   });
-};
+}
 
-// Return same bucket (no multi-node for now)
-const getBucket = () => bucket;
+// 🔥 Get bucket for a node
+function getBucket(nodeId) {
+  return buckets[nodeId];
+}
 
-// Dummy nodes (for your DFS logic)
-const getAllNodeIds = () => ["node1"];
+// 🔥 Get all node IDs
+function getAllNodeIds() {
+  return nodeIds;
+}
 
 module.exports = {
-  initBucket,
+  initBuckets,
   getBucket,
   getAllNodeIds,
 };
