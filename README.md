@@ -120,11 +120,15 @@ http://localhost:3000
 ```
 ## 🔌 API Endpoints 
 
-Method	 Endpoint	            Description   
-POST	    /api/upload	         Upload file  
-GET	    /api/download/:id	   Download file    
-GET	    /api/files	            List files  
-DELETE	 /api/delete/:id	      Delete file  
+## 📡 API Endpoints
+
+| Method | Endpoint          | Description   |
+| ------ | ----------------- | ------------- |
+| POST   | /api/upload       | Upload file   |
+| GET    | /api/download/:id | Download file |
+| GET    | /api/files        | List files    |
+| DELETE | /api/delete/:id   | Delete file   |
+
 
 ## 🧪 Testing with Postman
 
