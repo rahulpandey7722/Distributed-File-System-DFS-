@@ -5,6 +5,10 @@ A scalable **Distributed File System** built using **Node.js, MongoDB (GridFS), 
 The system implements **file chunking + consistent hashing** to distribute data across multiple nodes, ensuring **fault tolerance and efficient storage**.
 
 ---
+## 🚀 Live Demo
+
+🌐 Frontend: https://distributed-file-system-dfs.vercel.app  
+⚙️ Backend API: https://distributed-file-system-dfs-5ls2.onrender.com  
 
 ## 📌 Features
 
