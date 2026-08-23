@@ -12,9 +12,10 @@ const FileManifest = require("../models/FileManifest");
 
 const router = express.Router();
 
-// ✅ IMPORTANT FIX
+// ✅ Multer setup (memory + file size limit)
 const upload = multer({
   storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
 
 // 🚀 Upload route
@@ -22,15 +23,25 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     console.log("📥 Upload request received");
 
+    // ✅ Check file exists
     if (!req.file) {
       console.log("❌ No file received");
       return res.status(400).send("No file uploaded");
     }
 
+    // ✅ OPTIONAL: File type validation (REMOVE if you want all file types)
+    /*
+    const allowedTypes = ["image/", "application/pdf"];
+    if (!allowedTypes.some(type => req.file.mimetype.startsWith(type))) {
+      return res.status(400).send("Only images or PDFs allowed");
+    }
+    */
+
     console.log("File:", req.file.originalname);
 
     const nodes = getAllNodeIds();
 
+    // ✅ Check nodes available
     if (!nodes || nodes.length === 0) {
       console.log("❌ No nodes available");
       return res.status(500).send("No storage nodes available");
@@ -38,6 +49,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
     const ring = new ConsistentHashRing(nodes);
 
+    // ✅ Split file into chunks
     const chunks = splitFile(req.file.buffer);
     const chunkMeta = [];
 
@@ -51,6 +63,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
       const targets = [primary, replica];
 
+      // ✅ Store in primary + replica
       for (let node of targets) {
         const bucket = getBucket(node);
 
@@ -69,6 +82,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
         });
       }
 
+      // ✅ Save chunk metadata
       chunkMeta.push({
         chunkId: key,
         nodes: targets,
@@ -76,13 +90,13 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       });
     }
 
+    // ✅ Save file metadata in MongoDB
     const file = await FileManifest.create({
       filename: req.file.originalname,
       chunks: chunkMeta,
     });
-    console.log("Saved file:", file);
 
-    console.log("✅ Upload success");
+    console.log("✅ Upload success:", file._id);
 
     res.json({ fileId: file._id });
 
