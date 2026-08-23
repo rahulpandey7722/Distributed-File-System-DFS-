@@ -6,8 +6,8 @@ const {
   getAllNodeIds,
 } = require("../config/nodes");
 
-const ConsistentHashRing = require("../utils/hashRing");
-const splitFile = require("../utils/splitFile");
+const ConsistentHashRing = require("../services/hashRing");
+const { splitFile } = require("../services/chunkService");
 const FileManifest = require("../models/FileManifest");
 
 const router = express.Router();
