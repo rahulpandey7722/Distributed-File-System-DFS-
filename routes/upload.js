@@ -1,23 +1,41 @@
 const express = require("express");
 const multer = require("multer");
 
-const { splitFile } = require("../services/chunkService");
+const {
+  getBucket,
+  getAllNodeIds,
+} = require("../config/nodes");
+
+const ConsistentHashRing = require("../utils/hashRing");
+const splitFile = require("../utils/splitFile");
 const FileManifest = require("../models/FileManifest");
-const { getBucket, getAllNodeIds } = require("../config/nodes");
-const ConsistentHashRing = require("../services/hashRing");
 
-const router = express.Router(); // ✅ THIS WAS MISSING
-const upload = multer({ storage: multer.memoryStorage() });
+const router = express.Router();
 
+// ✅ IMPORTANT FIX
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
+
+// 🚀 Upload route
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    console.log("FILE RECEIVED:", req.file);
+    console.log("📥 Upload request received");
 
     if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      console.log("❌ No file received");
+      return res.status(400).send("No file uploaded");
     }
 
+    console.log("File:", req.file.originalname);
+
     const nodes = getAllNodeIds();
+
+    if (!nodes || nodes.length === 0) {
+      console.log("❌ No nodes available");
+      return res.status(500).send("No storage nodes available");
+    }
+
     const ring = new ConsistentHashRing(nodes);
 
     const chunks = splitFile(req.file.buffer);
@@ -36,15 +54,19 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       for (let node of targets) {
         const bucket = getBucket(node);
 
-        // 🚨 SAFETY CHECK (prevents your earlier crash)
         if (!bucket) {
-          throw new Error(`Bucket not found for node: ${node}`);
+          console.log("❌ Bucket missing for:", node);
+          throw new Error("Bucket not initialized");
         }
 
         const stream = bucket.openUploadStream(key);
 
         stream.end(chunk);
-        await new Promise((res) => stream.on("finish", res));
+
+        await new Promise((resolve, reject) => {
+          stream.on("finish", resolve);
+          stream.on("error", reject);
+        });
       }
 
       chunkMeta.push({
@@ -59,12 +81,14 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       chunks: chunkMeta,
     });
 
+    console.log("✅ Upload success");
+
     res.json({ fileId: file._id });
 
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);
-    res.status(500).json({ error: err.message });
+    console.error("❌ UPLOAD ERROR:", err);
+    res.status(500).send("Upload failed");
   }
 });
 
-module.exports = router; // ✅ THIS WAS ALSO REQUIRED
+module.exports = router;

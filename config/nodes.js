@@ -1,23 +1,24 @@
 const mongoose = require("mongoose");
 const { GridFSBucket } = require("mongodb");
 
-let buckets = {};
+let bucket;
 
-// Initialize buckets after DB connects
-const initBuckets = () => {
+// Initialize bucket after DB connection
+const initBucket = () => {
   const db = mongoose.connection.db;
-
-  buckets["node1"] = new GridFSBucket(db, { bucketName: "node1" });
-  buckets["node2"] = new GridFSBucket(db, { bucketName: "node2" });
-  buckets["node3"] = new GridFSBucket(db, { bucketName: "node3" });
-
-  console.log("✅ Connected to node1");
-  console.log("✅ Connected to node2");
-  console.log("✅ Connected to node3");
+  bucket = new GridFSBucket(db, {
+    bucketName: "uploads",
+  });
 };
 
-const getBucket = (nodeId) => buckets[nodeId];
+// Return same bucket (no multi-node for now)
+const getBucket = () => bucket;
 
-const getAllNodeIds = () => Object.keys(buckets);
+// Dummy nodes (for your DFS logic)
+const getAllNodeIds = () => ["node1"];
 
-module.exports = { initBuckets, getBucket, getAllNodeIds };
+module.exports = {
+  initBucket,
+  getBucket,
+  getAllNodeIds,
+};

@@ -1,10 +1,11 @@
 import axios from "axios";
 
+// ✅ Use deployed backend URL
 const API = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: "https://distributed-file-system-dfs-51s2.onrender.com/api",
 });
 
-// ✅ NAMED EXPORTS (VERY IMPORTANT)
+// APIs
 export const getFiles = () => API.get("/files");
 
 export const uploadFile = (formData) =>
@@ -15,4 +16,6 @@ export const uploadFile = (formData) =>
 export const deleteFile = (id) => API.delete(`/delete/${id}`);
 
 export const downloadFile = (id) =>
-  window.open(`http://localhost:3001/api/download/${id}`);
+  window.open(
+    `https://distributed-file-system-dfs-51s2.onrender.com/api/download/${id}`
+  );
