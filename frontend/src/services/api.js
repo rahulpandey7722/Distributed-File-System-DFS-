@@ -1,21 +1,23 @@
 import axios from "axios";
 
-// ✅ Use deployed backend URL
 const API = axios.create({
-  baseURL: "https://distributed-file-system-dfs-51s2.onrender.com/api",
+  baseURL: "https://distributed-file-system-dfs-5ls2.onrender.com/api",
 });
 
-// APIs
+// ✅ GET FILES
 export const getFiles = () => API.get("/files");
 
+// ✅ UPLOAD FILE
 export const uploadFile = (formData) =>
   API.post("/upload", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
+// ✅ DELETE FILE
 export const deleteFile = (id) => API.delete(`/delete/${id}`);
 
+// ✅ DOWNLOAD FILE
 export const downloadFile = (id) =>
   window.open(
-    `https://distributed-file-system-dfs-51s2.onrender.com/api/download/${id}`
+    `https://distributed-file-system-dfs-5ls2.onrender.com/api/download/${id}`
   );

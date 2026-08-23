@@ -80,6 +80,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       filename: req.file.originalname,
       chunks: chunkMeta,
     });
+    console.log("Saved file:", file);
 
     console.log("✅ Upload success");
 

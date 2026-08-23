@@ -1,16 +1,17 @@
-const express = require('express');
-const FileManifest = require('../models/FileManifest');
+const express = require("express");
+const FileManifest = require("../models/FileManifest");
 
 const router = express.Router();
 
-router.get('/files', async (req, res) => {
-  const files = await FileManifest.find();
-  res.json(files);
-});
-
-router.delete('/delete/:id', async (req, res) => {
-  await FileManifest.findByIdAndDelete(req.params.id);
-  res.send("Deleted");
+// ✅ GET all files
+router.get("/files", async (req, res) => {
+  try {
+    const files = await FileManifest.find().sort({ createdAt: -1 });
+    res.json(files);
+  } catch (err) {
+    console.error("FILES ERROR:", err);
+    res.status(500).send("Error fetching files");
+  }
 });
 
 module.exports = router;
