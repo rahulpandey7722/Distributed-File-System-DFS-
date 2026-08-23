@@ -1,30 +1,28 @@
-# Distributed File System (DFS)
+# 🚀 Distributed File System (DFS)
 
-A scalable Distributed File System built using Node.js, MongoDB (GridFS), and React that supports file upload, download, deletion, and replication. The system implements file chunking and consistent hashing to distribute data across multiple nodes, ensuring fault tolerance and efficient storage management.
+A scalable **Distributed File System** built using **Node.js, MongoDB (GridFS), and React** that supports file upload, download, deletion, and replication.
 
-## 🚀 Distributed File System (DFS) using MongoDB & React
-
-A full-stack Distributed File System that allows users to upload, store, download, and delete files using a scalable architecture with **Node.js, MongoDB (GridFS), and React**.
+The system implements **file chunking + consistent hashing** to distribute data across multiple nodes, ensuring **fault tolerance and efficient storage**.
 
 ---
 
 ## 📌 Features
 
 - 📤 Upload any file type (mp4, jpg, pdf, ppt, etc.)
-- 📥 Download files seamlessly
+- 📥 Download files
 - 🗑️ Delete files
 - 📂 List all uploaded files
 - ⚡ File chunking (splitting large files)
-- 🔁 Replication (fault tolerance)
+- 🔁 Replication across nodes (fault tolerance)
 - 🧠 Consistent hashing for node selection
-- 🌐 Simple React frontend UI
+- 🌐 React-based UI dashboard
+- 🖥️ Multi-node storage using MongoDB GridFS
 
 ---
 
 ## 🏗️ Tech Stack
 
 ### Backend
-
 - Node.js
 - Express.js
 - MongoDB (GridFS)
@@ -32,140 +30,138 @@ A full-stack Distributed File System that allows users to upload, store, downloa
 - Multer
 
 ### Frontend
-
 - React.js
 - Axios
+- React Router
 
 ---
 
 ## 📂 Project Structure
-
 ```
+
 dfs-project/
-├── config/                # MongoDB nodes setup
-│   └── nodes.js
+├── config/
+│ └── nodes.js # GridFS nodes setup
 ├── frontend/
-│   ├── public/
-│   │   └── index.html ✅
-│   ├── src/
-│   │   ├── App.js
-│   │   └── index.js ✅
-│   └── package.json ✅
+│ ├── public/
+│ ├── src/
+│ │ ├── components/
+│ │ ├── pages/
+│ │ ├── services/
+│ │ ├── App.js
+│ │ └── index.js
+│ └── package.json
 ├── models/
-│   └── FileManifest.js
-├── routes/                # API routes
-│   ├── download.js
-│   ├── files.js
-│   └── upload.js
-├── services/              # Hashing & chunk logic
-│   ├── chunkService.js
-│   └── hashRing.js
-├── .env                   # Environment variables
+│ └── FileManifest.js
+├── routes/
+│ ├── upload.js
+│ ├── download.js
+│ ├── files.js
+├── services/
+│ ├── chunkService.js
+│ └── hashRing.js
+├── .env
+├── server.js
 ├── package.json
-├── server.js              # Entry point
 ```
-
----
-
 
 ---
 
 ## ⚙️ How It Works
 
-1. File is uploaded via frontend/Postman
-2. Backend splits file into chunks
-3. Each chunk is:
-   - Stored in MongoDB (GridFS)
-   - Replicated to another node
-4. Metadata is saved in MongoDB
-5. On download:
-   - Chunks are fetched
-   - Reassembled into original file
+1. File is uploaded via frontend/Postman  
+2. Backend splits file into chunks  
+3. Each chunk:
+   - Stored in MongoDB (GridFS)  
+   - Replicated to another node  
+4. Metadata is stored in MongoDB   
+5. On download:  
+   - Chunks are fetched  
+   - Reassembled into original file    
 
 ---
 
 ## 🔧 Setup Instructions
 
----
-
-## 1. Clone Repository  
-```
-git clone https://github.com/rahulpandey7722/dfs-project.git  
-cd dfs-project    
+## 1. Clone Repository
+```bash
+git clone https://github.com/rahulpandey7722/dfs-project.git
+cd dfs-project
 ```
 ## 2. Install Backend Dependencies
 ```
-npm install(bash)  
+npm install
 ```
-## 3. Setup Environment Variables  
+## 3. Setup Environment Variables
+
+Create .env file:
 ```
-Create .env file:  
-MONGO_URI=your_mongodb_connection_string   
+MONGO_URI=your_mongodb_connection_string
 ```
-## 4. Run Backend  
+## 4. Run Backend
 ```
-node server.js(bash)  
+node server.js
 ```
-## Server will run on:  
-```
-http://localhost:3000  
-```
-## 5. Setup Frontend  
-```
-cd frontend  
-npm install  
-npm start  
-```
-## Frontend will run on:
+
+Backend runs on:
 ```
 http://localhost:3001
 ```
+👉 The server automatically handles port conflicts and shifts port if needed
 
-## 🔌 API Endpoints
-```
-Method	 Endpoint	           Description
-POST	    /api/upload	        Upload file
-GET	    /api/download/:id	  Download file
-GET	    /api/files	           List files
-DELETE	 /api/delete/:id	     Delete file
-```
+## 5. Setup Frontend
+cd frontend
+npm install
+npm start
 
-## 🧪 Testing with Postman  
-Upload File  
-Method: POST  
+Frontend runs on:
 ```
-URL: http://localhost:3000/api/upload  
+http://localhost:3000
 ```
-Body → form-data  
-Key: file (type: File)  
+## 🔌 API Endpoints 
+Method	Endpoint	           Description
+POST	   /api/upload	        Upload file
+GET	   /api/download/:id	  Download file
+GET	   /api/files	        List files
+DELETE	/api/delete/:id	  Delete file
 
-Download 
-Method: GET    
-```
-URL: http://localhost:3000/api/download/<field_id>  
-```
-To see list  
-Method: GET 
-```
-URL: http://localhost:3000/api/lists  
-```
-To delete  
-Method: DELETE  
-```
-URL: http://localhost:3000/api/delete/<field_id>  
-```
-## 📸 UI Preview  
-Upload file  
-View file list  
-Download/Delete files  
+## 🧪 Testing with Postman
 
-## 💡 Future Improvements
-✅ File search functionality  
-✅ Authentication (JWT)  
-✅ Progress bar for uploads  
-✅ Multi-node real distributed setup  
+Upload File
+Method: POST
+URL:
+http://localhost:3001/api/upload
+Body → form-data
+Key: file (type: File)
+Download File
+GET http://localhost:3001/api/download/<file_id>
+List Files
+GET http://localhost:3001/api/files
+Delete File
+DELETE http://localhost:3001/api/delete/<file_id>
 
-🧑‍💻 Author  
-Rahul Shankar Pandey  
-B.Tech CSE Student  
+## 📊 System Architecture
+Files are split into chunks
+Each chunk is distributed using consistent hashing
+Replication ensures:
+Fault tolerance
+High availability
+MongoDB GridFS acts as distributed storage nodes
 
+## 🧠 Core Concepts Used
+Distributed Systems
+Consistent Hashing
+Fault Tolerance
+Data Replication
+Chunk-based Storage
+GridFS (MongoDB)
+
+## 📸 UI Features
+Upload files
+View file list
+Download/Delete files
+Sidebar navigation
+Dashboard overview
+
+Rahul Shankar Pandey
+B.Tech CSE Student
