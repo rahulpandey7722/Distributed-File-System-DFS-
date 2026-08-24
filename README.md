@@ -7,8 +7,7 @@ The system implements **file chunking + consistent hashing** to distribute data 
 ---
 ## 🚀 Live Demo
 
-🌐 Frontend: https://distributed-file-system-dfs.vercel.app  
-⚙️ Backend API: https://distributed-file-system-dfs-5ls2.onrender.com  
+🌐 Demo: https://distributed-file-system-dfs.vercel.app  
 
 ## 📌 Features
 
