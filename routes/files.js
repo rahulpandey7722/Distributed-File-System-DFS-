@@ -1,50 +1,77 @@
 const express = require("express");
 const FileManifest = require("../models/FileManifest");
 const { getBucket } = require("../config/nodes");
+const { protect } = require("../middleware/authMiddleware");
+const { validateObjectId } = require("../middleware/validationMiddleware");
 
 const router = express.Router();
 
-// ✅ GET all files
-router.get("/files", async (req, res) => {
+// ✅ GET files (Supports ?scope=my [default] or ?scope=all)
+router.get("/files", protect, async (req, res) => {
   try {
-    const files = await FileManifest.find().sort({ createdAt: -1 });
+    const scope = req.query.scope || "my";
+    let query = {};
+
+    if (scope === "my") {
+      // Return files owned by current logged in user
+      query = { owner: req.user._id };
+    }
+    // If scope === "all", query stays {} to fetch all files in system
+
+    const files = await FileManifest.find(query)
+      .populate("owner", "name email")
+      .sort({ createdAt: -1 });
+
     res.json(files);
   } catch (err) {
-    console.error("FILES ERROR:", err);
-    res.status(500).send("Error fetching files");
+    console.error("FILES FETCH ERROR:", err);
+    res.status(500).json({ message: "Error fetching files" });
   }
 });
 
-// ✅ DELETE file
-router.delete("/delete/:id", async (req, res) => {
+// ✅ DELETE file (Enforces User-specific ownership authorization)
+router.delete("/delete/:id", protect, validateObjectId("id"), async (req, res) => {
   try {
     const file = await FileManifest.findById(req.params.id);
 
     if (!file) {
-      return res.status(404).send("File not found");
+      return res.status(404).json({ message: "File not found" });
     }
 
-    // 🔥 Delete chunks from GridFS
+    // 🔒 STRICT AUTHORIZATION CHECK
+    // If file has an owner and owner doesn't match logged-in user ID, block deletion!
+    if (file.owner && !file.owner.equals(req.user._id)) {
+      return res.status(403).json({
+        message: "Unauthorized: You can only delete files that you own!",
+      });
+    }
+
+    // 🔥 Delete file chunks from GridFS buckets
     for (let chunk of file.chunks) {
       for (let node of chunk.nodes) {
-        const bucket = getBucket(node);
+        try {
+          const bucket = getBucket(node);
+          if (!bucket) continue;
 
-        const files = await bucket.find({ filename: chunk.chunkId }).toArray();
+          const gridFiles = await bucket.find({ filename: chunk.chunkId }).toArray();
 
-        if (files.length > 0) {
-          await bucket.delete(files[0]._id);
+          for (let gFile of gridFiles) {
+            await bucket.delete(gFile._id);
+          }
+        } catch (bucketErr) {
+          console.warn(`Warning deleting chunk ${chunk.chunkId} from ${node}:`, bucketErr.message);
         }
       }
     }
 
-    // 🔥 Delete metadata
+    // 🔥 Delete metadata from MongoDB
     await FileManifest.findByIdAndDelete(req.params.id);
 
-    res.send("File deleted successfully");
+    res.json({ message: "File deleted successfully", deletedId: req.params.id });
 
   } catch (err) {
     console.error("DELETE ERROR:", err);
-    res.status(500).send("Delete failed");
+    res.status(500).json({ message: "Delete failed: " + err.message });
   }
 });
 

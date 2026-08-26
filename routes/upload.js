@@ -9,42 +9,33 @@ const {
 const ConsistentHashRing = require("../services/hashRing");
 const { splitFile } = require("../services/chunkService");
 const FileManifest = require("../models/FileManifest");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// ✅ Multer setup (memory + file size limit)
+// ✅ Multer setup (memory + file size limit: 10MB)
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
 });
 
-// 🚀 Upload route
-router.post("/upload", upload.single("file"), async (req, res) => {
+// 🚀 Upload route (Protected by JWT Auth)
+router.post("/upload", protect, upload.single("file"), async (req, res) => {
   try {
-    console.log("📥 Upload request received");
+    console.log("📥 Protected upload request received from user:", req.user.email);
 
     // ✅ Check file exists
     if (!req.file) {
-      console.log("❌ No file received");
-      return res.status(400).send("No file uploaded");
+      return res.status(400).json({ message: "No file provided for upload" });
     }
 
-    // ✅ OPTIONAL: File type validation (REMOVE if you want all file types)
-    /*
-    const allowedTypes = ["image/", "application/pdf"];
-    if (!allowedTypes.some(type => req.file.mimetype.startsWith(type))) {
-      return res.status(400).send("Only images or PDFs allowed");
-    }
-    */
-
-    console.log("File:", req.file.originalname);
-
+    const originalname = req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_");
     const nodes = getAllNodeIds();
 
-    // ✅ Check nodes available
+    // ✅ Check storage nodes available
     if (!nodes || nodes.length === 0) {
       console.log("❌ No nodes available");
-      return res.status(500).send("No storage nodes available");
+      return res.status(500).json({ message: "No storage nodes available" });
     }
 
     const ring = new ConsistentHashRing(nodes);
@@ -56,14 +47,14 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     let index = 0;
 
     for (let chunk of chunks) {
-      const key = req.file.originalname + index;
+      const key = `${Date.now()}_${originalname}_chunk_${index}`;
 
       const primary = ring.getNode(key);
       const replica = nodes[(nodes.indexOf(primary) + 1) % nodes.length];
 
       const targets = [primary, replica];
 
-      // ✅ Store in primary + replica
+      // ✅ Store in primary + replica GridFS buckets
       for (let node of targets) {
         const bucket = getBucket(node);
 
@@ -73,7 +64,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
         }
 
         const stream = bucket.openUploadStream(key);
-
         stream.end(chunk);
 
         await new Promise((resolve, reject) => {
@@ -90,19 +80,26 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       });
     }
 
-    // ✅ Save file metadata in MongoDB
+    // ✅ Save file metadata in MongoDB attached to req.user._id
     const file = await FileManifest.create({
       filename: req.file.originalname,
+      size: req.file.size,
+      mimeType: req.file.mimetype || "application/octet-stream",
+      owner: req.user._id,
       chunks: chunkMeta,
     });
 
-    console.log("✅ Upload success:", file._id);
+    console.log("✅ Upload success for user:", req.user.email, "File ID:", file._id);
 
-    res.json({ fileId: file._id });
+    res.json({
+      message: "File uploaded successfully",
+      fileId: file._id,
+      file,
+    });
 
   } catch (err) {
     console.error("❌ UPLOAD ERROR:", err);
-    res.status(500).send("Upload failed");
+    res.status(500).json({ message: "Upload failed: " + err.message });
   }
 });
 

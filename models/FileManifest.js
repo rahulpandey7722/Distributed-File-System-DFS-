@@ -7,7 +7,14 @@ const chunkSchema = new mongoose.Schema({
 }, { _id: false });
 
 const fileManifestSchema = new mongoose.Schema({
-  filename: String,
+  filename: { type: String, required: true },
+  size: { type: Number, default: 0 },
+  mimeType: { type: String, default: 'application/octet-stream' },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false
+  },
   chunks: [chunkSchema],
   createdAt: { type: Date, default: Date.now }
 });
