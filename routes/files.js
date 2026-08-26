@@ -39,8 +39,8 @@ router.delete("/delete/:id", protect, validateObjectId("id"), async (req, res) =
     }
 
     // 🔒 STRICT AUTHORIZATION CHECK
-    // If file has an owner and owner doesn't match logged-in user ID, block deletion!
-    if (file.owner && !file.owner.equals(req.user._id)) {
+    // If file does not have an owner or owner doesn't match logged-in user ID, block deletion!
+    if (!file.owner || !file.owner.equals(req.user._id)) {
       return res.status(403).json({
         message: "Unauthorized: You can only delete files that you own!",
       });

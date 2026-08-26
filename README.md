@@ -119,14 +119,36 @@ http://localhost:3000
 ```
 ## 🔌 API Endpoints 
 
-## 📡 API Endpoints
+| Method | Endpoint          | Access           | Description                              |
+| ------ | ----------------- | ---------------- | ---------------------------------------- |
+| POST   | /api/auth/signup  | Public           | Register new user account                |
+| POST   | /api/auth/login   | Public           | Authenticate user & return JWT Token     |
+| GET    | /api/auth/me      | Protected (JWT)  | Get current user profile                 |
+| POST   | /api/upload       | Protected (JWT)  | Upload file (sets `owner` to user ID)    |
+| GET    | /api/download/:id | Protected/Token  | Download file                            |
+| GET    | /api/view/:id     | Protected/Token  | Stream/view file inline in browser modal |
+| GET    | /api/files        | Protected (JWT)  | List user files (`?scope=my` or `all`)   |
+| DELETE | /api/delete/:id   | Protected (Owner)| Delete file (ONLY allowed for owner)     |
 
-| Method | Endpoint          | Description   |
-| ------ | ----------------- | ------------- |
-| POST   | /api/upload       | Upload file   |
-| GET    | /api/download/:id | Download file |
-| GET    | /api/files        | List files    |
-| DELETE | /api/delete/:id   | Delete file   |
+---
+
+## 🔒 Security & Authorization Architecture
+
+### 1. User Authentication (JWT + Bcrypt)
+- Users register via `/api/auth/signup` and sign in via `/api/auth/login`.
+- Passwords are hashed using `bcryptjs` before being saved to MongoDB.
+- Backend issues a signed JSON Web Token (JWT) valid for 7 days.
+- Requests pass the token in header: `Authorization: Bearer <token>`.
+
+### 2. User-Specific Authorization (Data Isolation)
+- Every uploaded file stores an `owner` reference linking to the uploading user's ID (`models/FileManifest.js`).
+- When a user requests to delete a file (`DELETE /api/delete/:id`), the backend verifies:
+  ```js
+  if (!file.owner || !file.owner.equals(req.user._id)) {
+    return res.status(403).json({ message: "Unauthorized: You can only delete files that you own!" });
+  }
+  ```
+- If a user attempts to delete a file owned by another user, the request is rejected with `403 Forbidden`.
 
 
 ## 🧪 Testing with Postman
